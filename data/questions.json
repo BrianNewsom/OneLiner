@@ -1,0 +1,20 @@
+[
+    {
+        "question": "Return true for all input",
+        "difficulty": "easy",
+        "test_cases": [
+            {
+                "input": 2,
+                "output": true
+            },
+            {
+                "input": 12,
+                "output": true
+            },
+            {
+                "input": "hello",
+                "output": true
+            }
+        ]
+    }
+]
