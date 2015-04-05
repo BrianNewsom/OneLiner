@@ -13,9 +13,14 @@ OneLiner - A competitive programming app based on filling out a function's retur
 * Express
 * React
 * Websockets
+
 # Learning (what new things you will need to learn?)
 * Learn and apply websockets using Socket.io
 * Gain a more solid understanding of React
 * Learn how to create a clean UI
+
 # Responsibilities (what each member will be responsible for?)
-??
+* Michael -
+* Dawson -
+* Peyman -
+* Brian -
