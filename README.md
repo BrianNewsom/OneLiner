@@ -30,4 +30,4 @@ Each person's responsibilities are explained in more detail in the milestones.  
 * Brian - Back end work, server setup and maintenance, UI design help and polishing.
 
 #Milestones
-  these live in "issues"
+  these live in "milestones"
