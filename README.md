@@ -23,10 +23,11 @@ OneLiner - A competitive programming app based on filling out a function's retur
 * Learn about what sorts of coding challenges are possible, enjoyable, and educational
 
 # Responsibilities (what each member will be responsible for?)
+Each person's responsibilities are explained in more detail in the milestones.  However in general:
 * Michael -
 * Dawson -
 * Peyman -
-* Brian -
+* Brian - Back end work, server setup and maintenance, UI design help and polishing.
 
 #Milestones
   these live in "issues"
