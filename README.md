@@ -31,3 +31,19 @@ Each person's responsibilities are explained in more detail in the milestones.  
 
 #Milestones
   these live in "milestones"
+  
+#Q.A.
+- Why would I ever do this?
+  * Coder quick decision making (dinner/beer/etc.)
+  * Code competition practices
+  * For fun / Bragging Rights
+
+- How do you determine the problems?
+  * Javascript for now - it's easy
+  * Trial and Error (are some of the problems impossible?)
+  * Finding golf challenges around the web
+
+- UI - does it suck?
+  * No
+  * Possibly show an end goal/render, and have the user try to implement the result. 
+  * Console? Possibly
