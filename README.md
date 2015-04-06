@@ -47,3 +47,16 @@ Each person's responsibilities are explained in more detail in the milestones.  
   * No
   * Possibly show an end goal/render, and have the user try to implement the result. 
   * Console? Possibly
+
+- How many questions are there?
+  * Approximately 40 - hopefully more to come.
+
+- How are the questions tested?
+  * Unit testing based on >5 test cases.
+
+- When does the challenge end?
+  * Whoever completes the challenge successfully first.
+
+- How are the people connected?
+  * Websockets!
+  * Socket.io
