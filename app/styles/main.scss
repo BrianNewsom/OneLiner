@@ -2,6 +2,10 @@ $icon-font-path: "/fonts/";
 
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
 
+* {
+    text-align: center;
+}
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -13,6 +17,7 @@ $icon-font-path: "/fonts/";
 body {
     padding-top: 20px;
     padding-bottom: 20px;
+    margin: 10px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
