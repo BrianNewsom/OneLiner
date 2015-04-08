@@ -1,4 +1,14 @@
 # OneLiner
+# Dev Notes
+Quick Start:
+- Fork the repo
+- npm install && bower install
+- gulp build
+- gulp serve
+
+It will most likely start on localhost:3000, BrowserSync should (hopefully) open the app.
+
+
 # Team's name and members
 3685 Guys Burgers and Fries
 ----------------------
