@@ -5,7 +5,7 @@ var React = window.React = require('react'),
 var Question = React.createClass({
     getQuestion : function(){
         // TODO: Use ajax call
-        return "Return the input array without any 7s";
+        return this.props.question;
     },
 
     render: function() {
@@ -18,6 +18,10 @@ var Question = React.createClass({
 });
 
 var Output = React.createClass({
+    getSolution: function() {
+        this.props.expectedSolution;
+    },
+
     render: function() {
         return (
             <div id="output">
@@ -76,27 +80,27 @@ var UserCode = React.createClass({
 
 var OneLinerApp = React.createClass({
   onSubmit: function() {
-    console.log('do something with code');
     var code = $('#code').val();
     console.log(code);
     var fn = new Function('input', "return " + code);
-    var output = fn([1,2,7,4,5,6]);
+    var output = fn(10);
     $('#user-output').val(output);
   },
 
 
   render: function() {
     var boilerplate = "function(input){\n\treturn USER-CODE\n}";
+    var q = {question: 'Return the input array without any sevens', testCases: [{input: [1,2,7,4,5,6], output: [1,2,4,5,6]}]}
     return (
       <div>
         <h1>OneLiner</h1>
-        <Question />
+        <Question question={q.question} />
         <div className="row">
             <div className="col-md-3">
                 <Boilerplate boilerplate={boilerplate} />
             </div>
             <div className="col-md-9">
-                <Output />
+                <Output expectedSolution={q.testCases[0].output} />
             </div>
         </div>
         <UserCode clicked={this.onSubmit}/>
