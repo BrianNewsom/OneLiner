@@ -1,6 +1,22 @@
 var React = window.React = require('react'),
     mountNode = document.getElementById("app");
 
+
+var Question = React.createClass({
+    getQuestion : function(){
+        // TODO: Use ajax call
+        return "Return the input array without any 7s";
+    },
+
+    render: function() {
+        return (
+            <div id="question">
+                <h2>{this.getQuestion()}</h2>
+            </div>
+        );
+    }
+});
+
 var Output = React.createClass({
     render: function() {
         return (
@@ -63,17 +79,18 @@ var OneLinerApp = React.createClass({
     console.log('do something with code');
     var code = $('#code').val();
     console.log(code);
-    var fn = new Function('input', "return " + code)
-    var output = fn(7)
+    var fn = new Function('input', "return " + code);
+    var output = fn([1,2,7,4,5,6]);
     $('#user-output').val(output);
   },
+
 
   render: function() {
     var boilerplate = "function(input){\n\treturn USER-CODE\n}";
     return (
       <div>
-        <h3>OneLiner</h3>
-        <h4>scripts/apps.js rendered me, go take a gander!</h4>
+        <h1>OneLiner</h1>
+        <Question />
         <div className="row">
             <div className="col-md-3">
                 <Boilerplate boilerplate={boilerplate} />
