@@ -42,11 +42,15 @@ var Boilerplate = React.createClass({
 });
 
 var UserCode = React.createClass({
+    handleClick: function() {
+        this.props.clicked();
+    },
     render: function() {
         return (
             <div id="user-code">
                 <h3>Write some code to solve the problem</h3>
                 <textarea className="form-control" id="code" rows="3"></textarea>
+                <button className="btn btn-default" id="submit" onClick={this.handleClick}>Submit</button>
             </div>
         )
 
@@ -55,6 +59,15 @@ var UserCode = React.createClass({
 })
 
 var OneLinerApp = React.createClass({
+  onSubmit: function() {
+    console.log('do something with code');
+    var code = $('#code').val();
+    console.log(code);
+    var fn = new Function('input', "return " + code)
+    var output = fn(7)
+    $('#user-output').val(output);
+  },
+
   render: function() {
     var boilerplate = "function(input){\n\treturn USER-CODE\n}";
     return (
@@ -69,7 +82,7 @@ var OneLinerApp = React.createClass({
                 <Output />
             </div>
         </div>
-        <UserCode />
+        <UserCode clicked={this.onSubmit}/>
       </div>
     );
   }
