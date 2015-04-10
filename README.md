@@ -35,7 +35,7 @@ OneLiner - A competitive programming app based on filling out a function's retur
 # Responsibilities (what each member will be responsible for?)
 Each person's responsibilities are explained in more detail in the milestones.  However in general:
 * Michael - Client work, routing, UI basics and bug fixes. 
-* Dawson -
+* Dawson - Make it cut-throatingly competitive, UI, colorscheming, and logo creation.
 * Peyman -
 * Brian - Back end work, server setup and maintenance, UI design help and polishing.
 
