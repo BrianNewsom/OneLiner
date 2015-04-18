@@ -1,7 +1,7 @@
 [
     {
         "question": "Return true for all input",
-        "difficulty": "easy",
+        "difficulty": 1,
         "test_cases": [
             {
                 "input": 2,
@@ -13,6 +13,14 @@
             },
             {
                 "input": "hello",
+                "output": true
+            },
+            {
+                "input": 3.14159,
+                "output": true
+            },
+            {
+                "input": [10, 11, 12],
                 "output": true
             }
         ]
