@@ -49,7 +49,8 @@ io.on('connection', function(socket) {
 
     // Remove "test_cases" from question object so front-end won't see test-cases.
     var questionObject = JSON.parse(JSON.stringify(sessionObject.question));
-    delete questionObject.test_cases;
+    questionObject.test_data = questionObject.test_cases[0];
+    delete questionObject.test_case;
 
     // Inform players in the session.
     firstPlayerSocket.emit("match_made", { session_id: sessionObject.id, opponent_id: sessionObject.player2.id, question: questionObject });
