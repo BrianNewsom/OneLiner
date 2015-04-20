@@ -19,6 +19,7 @@
     "gulp-useref": "~0.4.4",
     "gulp-util": "~3.0.1",
     "gulp-webserver": "latest",
+    "gulp-nodemon": "^2.0.2",
     "jest-cli": "latest",
     "react": "latest",
     "react-tools": "latest",
