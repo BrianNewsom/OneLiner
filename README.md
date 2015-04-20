@@ -70,3 +70,11 @@ Each person's responsibilities are explained in more detail in the milestones.  
 - How are the people connected?
   * Websockets!
   * Socket.io
+
+- What question types will we have?
+  * Basic Arithmetic (ex. Return var1 added with var2)
+  * Conditionals (ex. Return true if var1 is positive, false otherwise) 
+  * Ternary (ex. Return the larger between var1 and var2) 
+  * Builtin JS Magic (ex. Returned the reversed input array)
+  * Array things (ex. Return the first element of the array)
+
