@@ -128,7 +128,7 @@ gulp.task('clean', function(cb) {
 //Backend
 gulp.task('backend', function () {
   nodemon({
-    script: 'backend/app.js',
+    script: 'app.js',
     ext: 'js html',
     env: { 'NODE_ENV': 'development' }
   })
@@ -175,8 +175,9 @@ gulp.task('extras', function() {
 });
 
 // Watch
-gulp.task('watch', ['html', 'fonts', 'bundle'], function() {
+gulp.task('watch', ['html', 'fonts', 'bundle', 'backend'], function() {
 
+    /*
     browserSync({
         notify: false,
         logPrefix: 'BS',
@@ -186,6 +187,7 @@ gulp.task('watch', ['html', 'fonts', 'bundle'], function() {
         // https: true,
         server: ['dist', 'app']
     });
+    */
 
     // Watch .json files
     gulp.watch('app/scripts/**/*.json', ['json']);
@@ -209,6 +211,7 @@ gulp.task('watch', ['html', 'fonts', 'bundle'], function() {
 
 gulp.task('serve', ['html', 'fonts', 'bundle', 'backend'], function() {
 
+    /*
     browserSync({
         notify: false,
         logPrefix: 'BS',
@@ -218,6 +221,7 @@ gulp.task('serve', ['html', 'fonts', 'bundle', 'backend'], function() {
         // https: true,
         server: ['dist', 'app']
     });
+    */
 
     // Watch .json files
     gulp.watch('app/scripts/**/*.json', ['json']);
