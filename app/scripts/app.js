@@ -7,12 +7,12 @@ var Question = React.createClass({
     console.log(this.props)
         return (
             <div id="question">
-                <h2>{this.props.question}</h2>
+                <h2>{this.props.question_data.question}</h2>
                 <div className="col-md-9">
                   <div id="output">
                       <div className="row">
                           <div className="col-md-6 col-md-offset-5">
-                              <input className="form-control" id="solution-output" placeholder="Expected Output" readOnly></input>
+                              <input className="form-control" id="solution-output" placeholder={"Input: " + parseQuestionInput(this.props.question_data.test_data.input)} readOnly></input>
                           </div>
                       </div>
                       <div className="row">
@@ -24,7 +24,7 @@ var Question = React.createClass({
                           </div>
                       </div>
                       <div className="row">
-                          <CountdownTimer secondsRemaining="15" />
+                          <CountdownTimer secondsRemaining={this.props.question_data.time} />
                       </div>
                   </div>
                 </div>
@@ -86,15 +86,23 @@ var CountdownTimer = React.createClass({
   }
 });
 
+var parseQuestionInput = function(myString) {
+  var toReturn = ""
+  for (var i in myString){
+    toReturn += "var" + i + ": " + JSON.stringify(myString[i]) + ",  "
+  }
+  return toReturn
+};
+
 var OneLinerApp = React.createClass({
   getInitialState: function() {
     return ({question_data: {
         question: 'Example Question',
         difficulty: 0,
-        time: 0,
-        test_cases:
+        time: 9,
+        test_data:
             {
-                input: [[1],[2]],
+                input: [[1,4],[2]],
                 output: 2
             }
     }
@@ -111,7 +119,7 @@ var OneLinerApp = React.createClass({
     var q = {question: 'Return the input array without any sevens', testCases: [{input: [1,2,7,4,5,6], output: [1,2,4,5,6]}]}
     return (
       <div className="container-fluid">
-        <Question question={this.state.question_data} />
+        <Question question_data={this.state.question_data} />
         <CodeBox clicked={this.onSubmit}/>
       </div>
     );
