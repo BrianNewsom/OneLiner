@@ -2,7 +2,7 @@
 
 var gulp = require('gulp');
 var del = require('del');
-
+var nodemon = require('gulp-nodemon');
 
 var path = require('path');
 
@@ -125,6 +125,15 @@ gulp.task('clean', function(cb) {
     cb(del.sync(['dist/styles', 'dist/scripts', 'dist/images']));
 });
 
+//Backend
+gulp.task('backend', function () {
+  nodemon({
+    script: 'app.js',
+    ext: 'js html',
+    env: { 'NODE_ENV': 'development' }
+  })
+});
+
 // Bundle
 gulp.task('bundle', ['styles', 'scripts', 'bower'], function() {
     return gulp.src('./app/*.html')
@@ -166,8 +175,9 @@ gulp.task('extras', function() {
 });
 
 // Watch
-gulp.task('watch', ['html', 'fonts', 'bundle'], function() {
+gulp.task('watch', ['html', 'fonts', 'bundle', 'backend'], function() {
 
+    /*
     browserSync({
         notify: false,
         logPrefix: 'BS',
@@ -177,6 +187,7 @@ gulp.task('watch', ['html', 'fonts', 'bundle'], function() {
         // https: true,
         server: ['dist', 'app']
     });
+    */
 
     // Watch .json files
     gulp.watch('app/scripts/**/*.json', ['json']);
@@ -198,8 +209,9 @@ gulp.task('watch', ['html', 'fonts', 'bundle'], function() {
 
 //Serve
 
-gulp.task('serve', ['html', 'fonts', 'bundle'], function() {
+gulp.task('serve', ['html', 'fonts', 'bundle', 'backend'], function() {
 
+    /*
     browserSync({
         notify: false,
         logPrefix: 'BS',
@@ -209,6 +221,7 @@ gulp.task('serve', ['html', 'fonts', 'bundle'], function() {
         // https: true,
         server: ['dist', 'app']
     });
+    */
 
     // Watch .json files
     gulp.watch('app/scripts/**/*.json', ['json']);
