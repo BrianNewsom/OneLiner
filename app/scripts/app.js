@@ -99,7 +99,7 @@ var OneLinerApp = React.createClass({
     return ({question_data: {
         question: 'Example Question',
         difficulty: 0,
-        time: 9,
+        time: 0,
         test_data:
             {
                 input: [[1,4],[2]],
