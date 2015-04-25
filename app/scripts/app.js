@@ -159,6 +159,13 @@ var OneLinerApp = React.createClass({
        }
        
      }.bind(this));
+    
+    socket.on("game_over", function(result){
+      
+      console.log("a");
+      alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
+    
+    }.bind(this));
       
   },
   onSubmit: function() {
