@@ -4,7 +4,6 @@ var React = window.React = require('react'),
 
 var Question = React.createClass({
     render: function() {
-    console.log(this.props)
         return (
             <div id="question">
                 <h2>{this.props.question_data.question}</h2>
@@ -24,7 +23,7 @@ var Question = React.createClass({
                           </div>
                       </div>
                       <div className="row">
-                          <CountdownTimer secondsRemaining={this.props.question_data.time} />
+                        <CountdownTimer secondsRemaining={this.props.question_data.time}/>
                       </div>
                   </div>
                 </div>
@@ -67,19 +66,33 @@ var CountdownTimer = React.createClass({
     };
   },
   tick: function() {
+    
     this.setState({secondsRemaining: this.state.secondsRemaining - 1});
-    if (this.state.secondsRemaining <= 0) {
+    if (this.state.secondsRemaining < 0) {
       clearInterval(this.interval);
     }
+    
+  },
+  componentWillReceiveProps: function(nextProp) {
+    
+    this.setState({ secondsRemaining: nextProp.secondsRemaining });
+    clearInterval(this.interval);
+    this.interval = setInterval(this.tick, 1000);
+    
   },
   componentDidMount: function() {
+    
     this.setState({ secondsRemaining: this.props.secondsRemaining });
     this.interval = setInterval(this.tick, 1000);
+    
   },
   componentWillUnmount: function() {
+    
     clearInterval(this.interval);
+    
   },
   render: function() {
+    console.log("render: " + this.props.secondsRemaining);
     return (
       <div>Seconds Remaining: {this.state.secondsRemaining}</div>
     );
@@ -96,8 +109,8 @@ var parseQuestionInput = function(myString) {
 
 var OneLinerApp = React.createClass({
   getInitialState: function() {
-    return ({question_data: {
-        question: 'Example Question',
+    return ({ currentSession: {question: {
+        question: '',
         difficulty: 0,
         time: 0,
         test_data:
@@ -105,8 +118,28 @@ var OneLinerApp = React.createClass({
                 input: [[1,4],[2]],
                 output: 2
             }
-    }
+    }}
     })
+  },
+  componentDidMount: function()
+  {
+    
+      var socket = io();
+    
+      socket.on("match_made", function(session) {
+
+        console.log("found a match: " + JSON.stringify(session));
+
+        currentSession = session;
+        
+        this.setState({currentSession: session});
+        
+        console.log(this.state);
+
+        socket.emit("submit_answer", {session_id: session.session_id, code: "false"});
+
+      }.bind(this));
+      
   },
   onSubmit: function() {
     var code = $('#code').val();
@@ -119,7 +152,7 @@ var OneLinerApp = React.createClass({
     var q = {question: 'Return the input array without any sevens', testCases: [{input: [1,2,7,4,5,6], output: [1,2,4,5,6]}]}
     return (
       <div className="container-fluid">
-        <Question question_data={this.state.question_data} />
+        <Question question_data={this.state.currentSession.question} />
         <CodeBox clicked={this.onSubmit}/>
       </div>
     );
