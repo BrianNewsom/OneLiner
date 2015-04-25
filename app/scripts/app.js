@@ -71,30 +71,30 @@ var CountdownTimer = React.createClass({
     };
   },
   tick: function() {
-    
+
     this.setState({secondsRemaining: this.state.secondsRemaining - 1});
     if (this.state.secondsRemaining < 0) {
       clearInterval(this.interval);
     }
-    
+
   },
   componentWillReceiveProps: function(nextProp) {
-    
+
     this.setState({ secondsRemaining: nextProp.secondsRemaining });
     clearInterval(this.interval);
     this.interval = setInterval(this.tick, 1000);
-    
+
   },
   componentDidMount: function() {
-    
+
     this.setState({ secondsRemaining: this.props.secondsRemaining });
     this.interval = setInterval(this.tick, 1000);
-    
+
   },
   componentWillUnmount: function() {
-    
+
     clearInterval(this.interval);
-    
+
   },
   render: function() {
     console.log("render: " + this.props.secondsRemaining);
@@ -106,10 +106,14 @@ var CountdownTimer = React.createClass({
 
 var parseQuestionInput = function(myString) {
   var toReturn = ""
-  for (var i in myString){
-    toReturn += "var" + i + ": " + JSON.stringify(myString[i]) + ",  "
+  if (!myString){
+    return toReturn
   }
-  return toReturn
+  for (var i = 0; i < myString.length; i++){
+    console.log(typeof(i))
+    toReturn += "var" + parseInt(i+1) + ": " + JSON.stringify(myString[i]) + ",  "
+  }
+  return toReturn.substring(0, toReturn.length - 3);
 };
 
 var OneLinerApp = React.createClass({
@@ -131,51 +135,51 @@ var OneLinerApp = React.createClass({
   },
   componentDidMount: function()
   {
-    
+
       var socket = this.state.socket;
-    
+
       socket.on("match_made", function(session) {
 
         console.log("found a match: " + JSON.stringify(session));
 
         currentSession = session;
-        
+
         this.setState({currentSession: session});
 
       }.bind(this));
-    
+
      socket.on("incorrect_answer", function(debug_info) {
-       
+
        console.log(debug_info);
        if(this.state.currentSession.opponent_id != debug_info.submitter) {
-         
-          this.setState({yourOutput: debug_info.actual_value}); 
-         
+
+          this.setState({yourOutput: debug_info.actual_value});
+
        }
        else {
-         
+
          this.setState({opponentOutput: debug_info.actual_value});
-         
+
        }
-       
+
      }.bind(this));
-    
+
     socket.on("game_over", function(result){
-      
+
       console.log("a");
       alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
-    
+
     }.bind(this));
-      
+
   },
   onSubmit: function() {
-    
+
     var code = $('#code').val();
-    
+
     var socket = this.state.socket;
-    
+
     socket.emit("submit_answer", {session_id: this.state.currentSession.session_id, code: code});
-    
+
   },
   render: function() {
     return (
