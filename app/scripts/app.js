@@ -16,10 +16,15 @@ var Question = React.createClass({
                       </div>
                       <div className="row">
                           <div className="col-md-3 col-md-offset-5">
-                              <input className="form-control" id="user-output" placeholder="Your Output" readOnly></input>
+                              <input className="form-control" id="user-output" placeholder={"Expected Output: " + this.props.question_data.test_data.output} readOnly></input>
                           </div>
                           <div className="col-md-3 col-mod-offset-6" id="opponent">
-                              <input className="form-control" id="opponent-output" placeholder="Opponent Output" readOnly></input>
+                              <input className="form-control" id="opponent-output" placeholder={"Opponent Output: " + this.props.opponentOutput} readOnly></input>
+                          </div>
+                      </div>
+                      <div className="row">
+                          <div className="col-md-6 col-md-offset-5">
+                            <input className="form-control" placeholder={"Your Output: " + this.props.output} readOnly></input>
                           </div>
                       </div>
                       <div className="row">
@@ -115,16 +120,19 @@ var OneLinerApp = React.createClass({
         time: 0,
         test_data:
             {
-                input: [[1,4],[2]],
-                output: 2
+                input: null,
+                output: ""
             }
-    }}
+    }},
+    socket: io(),
+    yourOutput: "",
+    opponentOutput: ""
     })
   },
   componentDidMount: function()
   {
     
-      var socket = io();
+      var socket = this.state.socket;
     
       socket.on("match_made", function(session) {
 
@@ -133,26 +141,39 @@ var OneLinerApp = React.createClass({
         currentSession = session;
         
         this.setState({currentSession: session});
-        
-        console.log(this.state);
-
-        socket.emit("submit_answer", {session_id: session.session_id, code: "false"});
 
       }.bind(this));
+    
+     socket.on("incorrect_answer", function(debug_info) {
+       
+       console.log(debug_info);
+       if(this.state.currentSession.opponent_id != debug_info.submitter) {
+         
+          this.setState({yourOutput: debug_info.actual_value}); 
+         
+       }
+       else {
+         
+         this.setState({opponentOutput: debug_info.actual_value});
+         
+       }
+       
+     }.bind(this));
       
   },
   onSubmit: function() {
+    
     var code = $('#code').val();
-    console.log(code);
-    var fn = new Function('input', "return " + code);
-    var output = fn(10);
-    $('#user-output').val(output);
+    
+    var socket = this.state.socket;
+    
+    socket.emit("submit_answer", {session_id: this.state.currentSession.session_id, code: code});
+    
   },
   render: function() {
-    var q = {question: 'Return the input array without any sevens', testCases: [{input: [1,2,7,4,5,6], output: [1,2,4,5,6]}]}
     return (
       <div className="container-fluid">
-        <Question question_data={this.state.currentSession.question} />
+        <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput}/>
         <CodeBox clicked={this.onSubmit}/>
       </div>
     );
