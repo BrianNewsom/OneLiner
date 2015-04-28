@@ -5,14 +5,13 @@ var app = express();
 var http = require("http").Server(app);
 var io = require('socket.io')(http);
 var questions = require("./data/questions.json");
+var port = process.env.PORT || 3000;
 
 app.use(express.static('dist'));
-
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + 'index.html');
 });
-
 
 function getRandomQuestion() {
 
@@ -24,36 +23,36 @@ function getRandomQuestion() {
 }
 
 var createFunctionSignature = function (inputArray) {
-  
+
   if(!inputArray) return "";
   var functionSignature = "";
-  
+
   for(var i = 0; i < inputArray.length; i++) {
-    
+
     functionSignature += "var" + (i+1) + ",";
-    
+
   }
-  
+
   return functionSignature.substring(0, functionSignature.length - 1);
-  
+
 }
 
 var createInputParameters = function (inputArray) {
-  
+
   if(!inputArray) return "";
   var inputParameters = "";
-  
+
   for(var i = 0; i < inputArray.length; i++) {
-    
-    if(typeof(inputArray[i]) == "object")
+
+//    if(typeof(inputArray[i]) == "object")
       inputParameters += JSON.stringify(inputArray[i]) + ",";
-    else
-      inputParameters += inputArray[i] + ",";
-    
+//    else
+//      inputParameters += inputArray[i] + ",";
+
   }
   console.log(inputParameters);
   return inputParameters.substring(0, inputParameters.length-1);
-  
+
 }
 
 // MODULE HERE. refactor here
@@ -63,8 +62,8 @@ var gameSessions = [];
 
 // END MODULE
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(port, function(){
+  console.log('listening on *:', port);
 });
 
 io.on('connection', function(socket) {
@@ -111,9 +110,9 @@ io.on('connection', function(socket) {
     // Test the code.
     // TODO: add some logic to remove potential malicious code.
     try {
-      
+
         var fn = new Function(createFunctionSignature(gameSession.question.test_cases[0].input), 'return ' + packet.code);
-      
+
         for(var i=0; i < gameSession.question.test_cases.length; i++) {
 
             var test_case = gameSession.question.test_cases[i];
