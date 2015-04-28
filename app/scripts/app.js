@@ -3,43 +3,34 @@ var React = window.React = require('react'),
 
 
 var Question = React.createClass({
-    getQuestion : function(){
-        // TODO: Use ajax call
-        return this.props.question;
-    },
-
     render: function() {
         return (
             <div id="question">
-                <h2>{this.getQuestion()}</h2>
-            </div>
-        );
-    }
-});
-
-var Output = React.createClass({
-    getSolution: function() {
-        this.props.expectedSolution;
-    },
-
-    render: function() {
-        return (
-            <div id="output">
-                <div className="row">
-                    <div className="col-md-6 col-md-offset-5">
-                        <input className="form-control" id="solution-output" placeholder="Expected Output"></input>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-3 col-md-offset-5">
-                        <input className="form-control" id="user-output" placeholder="Your Output"></input>
-                    </div>
-                    <div className="col-md-3 col-mod-offset-6" id="opponent">
-                        <input className="form-control" id="opponent-output" placeholder="Opponent Output"></input>
-                    </div>
-                </div>
-                <div className="row">
-                    <CountdownTimer secondsRemaining="15" />
+                <h2>{this.props.question_data.question}</h2>
+                <div className="col-md-9">
+                  <div id="output">
+                      <div className="row">
+                          <div className="col-md-6 col-md-offset-5">
+                              <input className="form-control" id="solution-output" placeholder={"Input: " + parseQuestionInput(this.props.question_data.test_data.input)} readOnly></input>
+                          </div>
+                      </div>
+                      <div className="row">
+                          <div className="col-md-3 col-md-offset-5">
+                              <input className="form-control" id="user-output" placeholder={"Expected Output: " + this.props.question_data.test_data.output} readOnly></input>
+                          </div>
+                          <div className="col-md-3 col-mod-offset-6" id="opponent">
+                              <input className="form-control" id="opponent-output" placeholder={"Opponent Output: " + this.props.opponentOutput} readOnly></input>
+                          </div>
+                      </div>
+                      <div className="row">
+                          <div className="col-md-6 col-md-offset-5">
+                            <input className="form-control" placeholder={"Your Output: " + this.props.output} readOnly></input>
+                          </div>
+                      </div>
+                      <div className="row">
+                        <CountdownTimer secondsRemaining={this.props.question_data.time}/>
+                      </div>
+                  </div>
                 </div>
             </div>
         );
@@ -80,43 +71,120 @@ var CountdownTimer = React.createClass({
     };
   },
   tick: function() {
+
     this.setState({secondsRemaining: this.state.secondsRemaining - 1});
-    if (this.state.secondsRemaining <= 0) {
+    if (this.state.secondsRemaining < 0) {
       clearInterval(this.interval);
     }
+
+  },
+  componentWillReceiveProps: function(nextProp) {
+
+    this.setState({ secondsRemaining: nextProp.secondsRemaining });
+    clearInterval(this.interval);
+    this.interval = setInterval(this.tick, 1000);
+
   },
   componentDidMount: function() {
+
     this.setState({ secondsRemaining: this.props.secondsRemaining });
     this.interval = setInterval(this.tick, 1000);
+
   },
   componentWillUnmount: function() {
+
     clearInterval(this.interval);
+
   },
   render: function() {
+    console.log("render: " + this.props.secondsRemaining);
     return (
       <div>Seconds Remaining: {this.state.secondsRemaining}</div>
     );
   }
 });
 
+var parseQuestionInput = function(myString) {
+  var toReturn = ""
+  if (!myString){
+    return toReturn
+  }
+  for (var i = 0; i < myString.length; i++){
+    console.log(typeof(i))
+    toReturn += "var" + parseInt(i+1) + ": " + JSON.stringify(myString[i]) + ",  "
+  }
+  return toReturn.substring(0, toReturn.length - 3);
+};
+
 var OneLinerApp = React.createClass({
-  onSubmit: function() {
-    var code = $('#code').val();
-    console.log(code);
-    var fn = new Function('input', "return " + code);
-    var output = fn(10);
-    $('#user-output').val(output);
+  getInitialState: function() {
+    return ({ currentSession: {question: {
+        question: '',
+        difficulty: 0,
+        time: 0,
+        test_data:
+            {
+                input: null,
+                output: ""
+            }
+    }},
+    socket: io(),
+    yourOutput: "",
+    opponentOutput: ""
+    })
   },
+  componentDidMount: function()
+  {
 
+      var socket = this.state.socket;
 
+      socket.on("match_made", function(session) {
+
+        console.log("found a match: " + JSON.stringify(session));
+
+        currentSession = session;
+
+        this.setState({currentSession: session});
+
+      }.bind(this));
+
+     socket.on("incorrect_answer", function(debug_info) {
+
+       console.log(debug_info);
+       if(this.state.currentSession.opponent_id != debug_info.submitter) {
+
+          this.setState({yourOutput: debug_info.actual_value});
+
+       }
+       else {
+
+         this.setState({opponentOutput: debug_info.actual_value});
+
+       }
+
+     }.bind(this));
+
+    socket.on("game_over", function(result){
+
+      console.log("a");
+      alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
+
+    }.bind(this));
+
+  },
+  onSubmit: function() {
+
+    var code = $('#code').val();
+
+    var socket = this.state.socket;
+
+    socket.emit("submit_answer", {session_id: this.state.currentSession.session_id, code: code});
+
+  },
   render: function() {
-    var q = {question: 'Return the input array without any sevens', testCases: [{input: [1,2,7,4,5,6], output: [1,2,4,5,6]}]}
     return (
       <div className="container-fluid">
-        <Question question={q.question} />
-            <div className="col-md-9">
-                <Output expectedSolution={q.testCases[0].output} />
-            </div>
+        <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput}/>
         <CodeBox clicked={this.onSubmit}/>
       </div>
     );
