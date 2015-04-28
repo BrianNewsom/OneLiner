@@ -1,8 +1,8 @@
 # OneLiner
 # Styling Notes
-Primary Hex: #22959D
-Secondary (Darkest Blue): #147b86
-Tertiary (Lighest Blue): #74C2E1
+- Primary Hex: #22959D
+- Secondary (Darkest Blue): #147b86
+- Tertiary (Lighest Blue): #74C2E1
 
 # Dev Notes
 Quick Start:
