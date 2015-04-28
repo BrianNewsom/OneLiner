@@ -8,11 +8,9 @@ var questions = require("./data/questions.json");
 
 app.use(express.static('dist'));
 
-
 app.get('/', function(req, res){
   res.sendFile(__dirname + 'index.html');
 });
-
 
 function getRandomQuestion() {
 
@@ -45,10 +43,10 @@ var createInputParameters = function (inputArray) {
   
   for(var i = 0; i < inputArray.length; i++) {
     
-    if(typeof(inputArray[i]) == "object")
+//    if(typeof(inputArray[i]) == "object")
       inputParameters += JSON.stringify(inputArray[i]) + ",";
-    else
-      inputParameters += inputArray[i] + ",";
+//    else
+//      inputParameters += inputArray[i] + ",";
     
   }
   console.log(inputParameters);
