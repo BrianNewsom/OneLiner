@@ -98,3 +98,66 @@ body {
         border-bottom: 0;
     }
 }
+
+
+/* Override bootstrap disabled element */
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: white;
+}
+
+body{
+  background-image: linear-gradient(135deg, #4ebdc0, #53c9b3);
+  height: 100%;
+}
+
+body{
+  min-height: 100%;
+  position: relative;
+  text-align: center;
+  padding-top: 100px;
+  color: #E7F7F5;
+  font-family: 'Helvetica Neue', 'Arial';
+  font-weight: 100;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+a{
+  display: block;
+  margin-bottom: 1em;
+  color: #E7F7F5;
+  text-decoration: none;
+  &:last-of-type{
+    font-size: 0.9em;
+  }
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+ul{
+  margin-bottom: 4em;
+}
+
+.chart{
+  display: inline-block;
+  width: 95px;
+  height: 95px;
+  margin: 0 10px;
+  vertical-align: top;
+  position: relative;
+ /*.box-sizing(border-box);*/
+  padding-top: 22px;
+
+  span{
+    display: block;
+    font-size: 2em;
+    font-weight: normal;
+  }
+
+  canvas{
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}

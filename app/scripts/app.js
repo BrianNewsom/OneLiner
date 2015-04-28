@@ -54,9 +54,11 @@ var CodeBox = React.createClass({
     },
     render: function() {
         return (
-            <div id="code-box">
-                <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question"></textarea>
-                <button className="btn btn-default" id="submit" onClick={this.handleClick}>Submit</button>
+            <div className="row">
+                <div id="code-box">
+                    <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question">return ;</textarea>
+                    <button className="btn btn-default" id="submit" onClick={this.handleClick}>Submit</button>
+                </div>
             </div>
         )
 
@@ -99,7 +101,11 @@ var CountdownTimer = React.createClass({
   render: function() {
     console.log("render: " + this.props.secondsRemaining);
     return (
-      <div>Seconds Remaining: {this.state.secondsRemaining}</div>
+    <div>
+       <ul>
+          <li className="chart" data-percent="100"><span>{this.state.secondsRemaining}</span></li>
+      </ul>
+    </div>
     );
   }
 });
