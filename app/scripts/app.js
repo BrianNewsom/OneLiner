@@ -4,6 +4,7 @@ var React = window.React = require('react'),
 
 var Question = React.createClass({
     render: function() {
+      if(!this.props.hidden){
         return (
             <div id="question">
                 <h2>{this.props.question_data.question}</h2>
@@ -35,6 +36,10 @@ var Question = React.createClass({
             </div>
         );
     }
+  else{
+  return <div></div>
+}
+    }
 });
 
 var Boilerplate = React.createClass({
@@ -53,6 +58,8 @@ var CodeBox = React.createClass({
         this.props.clicked();
     },
     render: function() {
+      
+      if(!this.props.hidden){
         return (
             <div className="row">
                 <div id="code-box">
@@ -61,6 +68,10 @@ var CodeBox = React.createClass({
                 </div>
             </div>
         )
+      }
+      else{
+        return <div/>;
+      }
 
     }
 
@@ -122,6 +133,20 @@ var parseQuestionInput = function(myString) {
   return toReturn.substring(0, toReturn.length - 3);
 };
 
+var WelcomePage = React.createClass({
+  
+  render: function() {
+    
+    if(this.props.hidden)
+      return <div/>
+        
+    else
+      return <p>WELCOME !</p>;
+    
+  }
+  
+});
+
 var OneLinerApp = React.createClass({
   getInitialState: function() {
     return ({ currentSession: {question: {
@@ -136,7 +161,8 @@ var OneLinerApp = React.createClass({
     }},
     socket: io(),
     yourOutput: "",
-    opponentOutput: ""
+    opponentOutput: "",
+    isMatched:false
     })
   },
   componentDidMount: function()
@@ -150,7 +176,7 @@ var OneLinerApp = React.createClass({
 
         currentSession = session;
 
-        this.setState({currentSession: session});
+        this.setState({currentSession: session, isMatched: true});
 
       }.bind(this));
 
@@ -172,7 +198,6 @@ var OneLinerApp = React.createClass({
 
     socket.on("game_over", function(result){
 
-      console.log("a");
       alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
 
     }.bind(this));
@@ -190,8 +215,9 @@ var OneLinerApp = React.createClass({
   render: function() {
     return (
       <div className="container-fluid">
-        <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput}/>
-        <CodeBox clicked={this.onSubmit}/>
+        <WelcomePage hidden={this.state.isMatched}/>
+        <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput} hidden={!this.state.isMatched}/>
+        <CodeBox clicked={this.onSubmit} hidden={!this.state.isMatched}/>
       </div>
     );
   }
