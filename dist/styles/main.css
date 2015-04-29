@@ -7077,6 +7077,12 @@ button.close {
   text-align: left;
 }
 
+.error {
+  border-style: solid;
+  border-color: firebrick;
+  border-width: 1px;
+}
+
 .browsehappy {
   margin: 0.2em 0;
   background: #ccc;
