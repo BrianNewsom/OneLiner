@@ -8,11 +8,10 @@ var Question = React.createClass({displayName: "Question",
       if(!this.props.hidden) {
         return (
             React.createElement("div", {id: "question"}, 
-                React.createElement("h2", null, this.props.question_data.question), 
-                React.createElement("div", {className: "col-md-9"}, 
                   React.createElement("div", {id: "output"}, 
                       React.createElement("div", {className: "row"}, 
                           React.createElement("div", {className: "col-md-6 col-md-offset-5"}, 
+                              React.createElement("h2", null, this.props.question_data.question), 
                               React.createElement("input", {className: "form-control", id: "question-input", placeholder: "Input: " + parseQuestionInput(this.props.question_data.test_data.input), readOnly: true})
                           )
                       ), 
@@ -29,7 +28,6 @@ var Question = React.createClass({displayName: "Question",
                             React.createElement("input", {id: "output-box", className: "form-control", placeholder: "Your Output: " + this.props.output, readOnly: true})
                           )
                       )
-                  )
                 )
             )
         );
@@ -60,9 +58,11 @@ var CodeBox = React.createClass({displayName: "CodeBox",
       if(!this.props.hidden){
         return (
             React.createElement("div", {className: "row"}, 
-                React.createElement("div", {id: "code-box"}, 
-                    React.createElement("textarea", {className: "form-control", id: "code", rows: "3", placeholder: "Write some code to solve the question"}, "return "), 
-                    React.createElement("button", {className: "btn btn-default", id: "submit", onClick: this.handleClick}, "Submit")
+                React.createElement("div", {className: "col-md-6 col-md-offset-5"}, 
+                    React.createElement("div", {id: "code-box"}, 
+                        React.createElement("textarea", {className: "form-control", id: "code", rows: "3", placeholder: "Write some code to solve the question"}, "return "), 
+                        React.createElement("button", {className: "btn btn-default", id: "submit", onClick: this.handleClick}, "Submit")
+                    )
                 )
             )
         )
@@ -116,22 +116,60 @@ var WelcomePage = React.createClass({displayName: "WelcomePage",
 
 });
 
+var GameOverPage = React.createClass({displayName: "GameOverPage",
+  handleClick: function() {
+    this.props.clicked();
+  },
+  render: function() {
+
+    if(this.props.hidden)
+      return React.createElement("div", null)
+
+    else{
+      var result = "";
+      this.props.winner ? result = "You Win!" : result = "You Lose :(";
+
+      return (
+        React.createElement("div", null, 
+          React.createElement("div", {className: "row"}, 
+            React.createElement("img", {className: "logoFit", src: "http://i.imgur.com/aDL2oT4.png"})
+          ), 
+          React.createElement("div", {className: "row"}, 
+            React.createElement("h1", null, " Game Over! ")
+          ), 
+          React.createElement("div", {className: "row"}, 
+            React.createElement("h1", null, " ", result, " ")
+          ), 
+          React.createElement("br", null), 
+          React.createElement("button", {onClick: this.handleClick, className: "btn btn-default"}, "Play Again!"), 
+          React.createElement("br", null)
+        )
+      )
+    }
+
+  }
+
+});
+
+
 var OneLinerApp = React.createClass({displayName: "OneLinerApp",
   getInitialState: function() {
-    return ({ currentSession: { question: {
-        question: '',
-        difficulty: 0,
-        time: 0,
-        test_data:
-            {
-                input: null,
-                output: ""
-            }
-    }},
-    socket: io(),
-    yourOutput: "",
-    opponentOutput: "",
-    isMatched:false
+    return ({
+        currentSession: { question: {
+            question: '',
+            difficulty: 0,
+            time: 0,
+            test_data:
+                {
+                    input: null,
+                    output: ""
+                }
+        }},
+        socket: io(),
+        yourOutput: "",
+        opponentOutput: "",
+        isMatched:false,
+        isGameOver:false
     })
   },
   componentDidMount: function()
@@ -140,7 +178,7 @@ var OneLinerApp = React.createClass({displayName: "OneLinerApp",
       var socket = this.state.socket;
 
       socket.on("match_made", function(session) {
-        
+
         $("#output-box").removeClass("error");
 
         console.log("found a match: " + JSON.stringify(session));
@@ -177,7 +215,7 @@ var OneLinerApp = React.createClass({displayName: "OneLinerApp",
        if(this.state.currentSession.opponent_id != debug_info.submitter) {
 
           this.setState({yourOutput: debug_info.actual_value});
-         
+
           $("#expected-output").val("Expected Output: " + debug_info.expected_value);
           $("#question-input").val("Input: " + parseQuestionInput(debug_info.input_value));
           $("#output-box").addClass("error");
@@ -193,11 +231,13 @@ var OneLinerApp = React.createClass({displayName: "OneLinerApp",
 
     socket.on("game_over", function(result) {
 
-      alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
-
+      this.setState({isWinner: this.state.currentSession.opponent_id != result.winner});
+      this.setState({isGameOver: "true"});
+      /*
       socket.emit("requeue");
-      
+
       $('#code').val("return ");
+      */
 
     }.bind(this));
 
@@ -211,12 +251,35 @@ var OneLinerApp = React.createClass({displayName: "OneLinerApp",
     socket.emit("submit_answer", {session_id: this.state.currentSession.session_id, code: code});
 
   },
+  onPlayAgain: function() {
+
+    var socket = this.state.socket;
+
+    this.setState({
+        currentSession: { question: {
+            question: '',
+            difficulty: 0,
+            time: 0,
+            test_data:
+                {
+                    input: null,
+                    output: ""
+                }
+        }},
+        isMatched: false, isGameOver: false, yourOutput: "", opponentOutput: "", isWinner: false
+    });
+
+    socket.emit("requeue");
+  },
   render: function() {
     return (
       React.createElement("div", {className: "container-fluid"}, 
         React.createElement(WelcomePage, {hidden: this.state.isMatched}), 
-        React.createElement(Question, {question_data: this.state.currentSession.question, output: this.state.yourOutput, opponentOutput: this.state.opponentOutput, hidden: !this.state.isMatched}), 
-        React.createElement(CodeBox, {clicked: this.onSubmit, hidden: !this.state.isMatched})
+            React.createElement("div", {className: "col-md-9"}, 
+                React.createElement(Question, {question_data: this.state.currentSession.question, output: this.state.yourOutput, opponentOutput: this.state.opponentOutput, hidden: !this.state.isMatched || this.state.isGameOver}), 
+                React.createElement(CodeBox, {clicked: this.onSubmit, hidden: !this.state.isMatched || this.state.isGameOver})
+            ), 
+        React.createElement(GameOverPage, {hidden: !this.state.isGameOver, clicked: this.onPlayAgain, winner: this.state.isWinner})
       )
     );
   }

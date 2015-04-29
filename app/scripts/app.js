@@ -7,11 +7,10 @@ var Question = React.createClass({
       if(!this.props.hidden) {
         return (
             <div id="question">
-                <h2>{this.props.question_data.question}</h2>
-                <div className="col-md-9">
                   <div id="output">
                       <div className="row">
                           <div className="col-md-6 col-md-offset-5">
+                              <h2>{this.props.question_data.question}</h2>
                               <input className="form-control" id="question-input" placeholder={"Input: " + parseQuestionInput(this.props.question_data.test_data.input)} readOnly></input>
                           </div>
                       </div>
@@ -28,7 +27,6 @@ var Question = React.createClass({
                             <input id="output-box" className="form-control" placeholder={"Your Output: " + this.props.output} readOnly></input>
                           </div>
                       </div>
-                  </div>
                 </div>
             </div>
         );
@@ -59,9 +57,11 @@ var CodeBox = React.createClass({
       if(!this.props.hidden){
         return (
             <div className="row">
-                <div id="code-box">
-                    <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question">return </textarea>
-                    <button className="btn btn-default" id="submit" onClick={this.handleClick}>Submit</button>
+                <div className="col-md-6 col-md-offset-5">
+                    <div id="code-box">
+                        <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question">return </textarea>
+                        <button className="btn btn-default" id="submit" onClick={this.handleClick}>Submit</button>
+                    </div>
                 </div>
             </div>
         )
@@ -274,8 +274,10 @@ var OneLinerApp = React.createClass({
     return (
       <div className="container-fluid">
         <WelcomePage hidden={this.state.isMatched}/>
-        <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput} hidden={!this.state.isMatched || this.state.isGameOver}/>
-        <CodeBox clicked={this.onSubmit} hidden={!this.state.isMatched || this.state.isGameOver}/>
+            <div className="col-md-9">
+                <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput} hidden={!this.state.isMatched || this.state.isGameOver}/>
+                <CodeBox clicked={this.onSubmit} hidden={!this.state.isMatched || this.state.isGameOver}/>
+            </div>
         <GameOverPage hidden={!this.state.isGameOver} clicked={this.onPlayAgain} winner={this.state.isWinner}/>
       </div>
     );
