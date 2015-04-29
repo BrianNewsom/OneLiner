@@ -124,15 +124,20 @@ io.on('connection', function(socket) {
             var actualValue = eval("fn(" + createInputParameters(test_case.input) + ")");
             if(actualValue != test_case.output) {
               
-                gameSession.player1.emit("incorrect_answer", {"submitter": socket.id, "actual_value": actualValue});
-                gameSession.player2.emit("incorrect_answer", {"submitter": socket.id, "actual_value": actualValue});
+                var debug_info = {"submitter": socket.id, "actual_value": actualValue, "expected_value": test_case.output, "input_value": test_case.input};
+              
+                gameSession.player1.emit("incorrect_answer", debug_info);
+                gameSession.player2.emit("incorrect_answer", debug_info);
                 return;
             }
         };
       }
     catch(exception) {
-        gameSession.player1.emit("incorrect_answer", {"submitter": socket.id, "actual_value": exception.message});
-        gameSession.player2.emit("incorrect_answer", {"submitter": socket.id, "actual_value": exception.message});
+      
+      var debug_info = {"submitter": socket.id, "actual_value": exception.message, "expected_value": test_case.output, "input_value": test_case.input}
+      
+        gameSession.player1.emit("incorrect_answer", debug_info);
+        gameSession.player2.emit("incorrect_answer", debug_info);
         return;
     }
 

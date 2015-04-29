@@ -176,7 +176,7 @@ var OneLinerApp = React.createClass({
 
         currentSession = session;
 
-        this.setState({currentSession: session, isMatched: true});
+        this.setState({currentSession: session, isMatched: true, yourOutput: "", opponentOutput: ""});
 
       }.bind(this));
 
@@ -196,7 +196,7 @@ var OneLinerApp = React.createClass({
 
      }.bind(this));
 
-    socket.on("game_over", function(result){
+    socket.on("game_over", function(result) {
 
       alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
       
