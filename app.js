@@ -47,7 +47,6 @@ var createInputParameters = function (inputArray) {
       inputParameters += JSON.stringify(inputArray[i]) + ",";
 
   }
-  console.log(inputParameters);
   return inputParameters.substring(0, inputParameters.length-1);
 
 }
@@ -64,6 +63,7 @@ io.on('connection', function(socket) {
   console.log(socket.id + ' connected');
 
   var matchPlayer = function() {
+    
     if( playerQueue.length > 0 ) {
 
     // Get the first player in the queue.
@@ -95,7 +95,6 @@ io.on('connection', function(socket) {
 
   socket.on("requeue", function() {
     
-    playerQueue.push(socket);
     matchPlayer();
     
   });
@@ -122,19 +121,23 @@ io.on('connection', function(socket) {
 
             var test_case = gameSession.question.test_cases[i];
 
-            console.log("function("+createFunctionSignature(gameSession.question.test_cases[0].input)+") = fn(" + createInputParameters(test_case.input) + ")");
             var actualValue = eval("fn(" + createInputParameters(test_case.input) + ")");
             if(actualValue != test_case.output) {
-                console.log(test_case);
-                gameSession.player1.emit("incorrect_answer", {"submitter": socket.id, "actual_value": actualValue});
-                gameSession.player2.emit("incorrect_answer", {"submitter": socket.id, "actual_value": actualValue});
+              
+                var debug_info = {"submitter": socket.id, "actual_value": actualValue, "expected_value": test_case.output, "input_value": test_case.input};
+              
+                gameSession.player1.emit("incorrect_answer", debug_info);
+                gameSession.player2.emit("incorrect_answer", debug_info);
                 return;
             }
         };
       }
     catch(exception) {
-        gameSession.player1.emit("incorrect_answer", {"submitter": socket.id, "actual_value": exception.message});
-        gameSession.player2.emit("incorrect_answer", {"submitter": socket.id, "actual_value": exception.message});
+      
+      var debug_info = {"submitter": socket.id, "actual_value": exception.message, "expected_value": test_case.output, "input_value": test_case.input}
+      
+        gameSession.player1.emit("incorrect_answer", debug_info);
+        gameSession.player2.emit("incorrect_answer", debug_info);
         return;
     }
 
