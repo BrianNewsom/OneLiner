@@ -214,5 +214,113 @@
                 "output": true
             }
         ]
+    },
+    {
+        "question": "Return five percent of var1",
+        "difficulty": 2,
+        "time": 75,
+        "test_cases": [
+            {
+                "input": [10],
+                "output": 0.5
+            },
+            {
+                "input":  [-99],
+                "output": -4.95
+            },
+            {
+                "input": [0],
+                "output": 0
+            },
+            {
+                "input": [800],
+                "output": 40
+            },
+            {
+                "input": [-1000],
+                "output": -50
+            }
+        ]
+    },
+    {
+        "question": "Return true if var1 is divisible by 7, otherwise false",
+        "difficulty": 3,
+        "time": 75,
+        "test_cases": [
+            {
+                "input": [7],
+                "output": true
+            },
+            {
+                "input":  [-7],
+                "output": true
+            },
+            {
+                "input": [1],
+                "output": false
+            },
+            {
+                "input": [800],
+                "output": false
+            },
+            {
+                "input": [-1000],
+                "output": false
+            }
+        ]
+    },
+    {
+        "question": "Return string var1 without the first letter *Hint, use substring",
+        "difficulty": 3,
+        "time": 75,
+        "test_cases": [
+            {
+                "input": ["hello"],
+                "output": "ello"
+            },
+            {
+                "input":  ["YO"],
+                "output": "O"
+            },
+            {
+                "input": ["Greetings"],
+                "output": "reetings"
+            },
+            {
+                "input": ["WORLD"],
+                "output": "ORLD"
+            },
+            {
+                "input": ["Boulder"],
+                "output": "oulder"
+            }
+        ]
+    },
+    {
+        "question": "Return var1 joined with var2 *Hint use join",
+        "difficulty": 3,
+        "time": 75,
+        "test_cases": [
+            {
+                "input": ["hello", " world"],
+                "output": "ello"
+            },
+            {
+                "input":  ["YO"],
+                "output": "O"
+            },
+            {
+                "input": ["Greetings"],
+                "output": "reetings"
+            },
+            {
+                "input": ["WORLD"],
+                "output": "ORLD"
+            },
+            {
+                "input": ["Boulder"],
+                "output": "oulder"
+            }
+        ]
     }
 ]
