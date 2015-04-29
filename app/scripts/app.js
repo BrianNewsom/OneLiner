@@ -58,12 +58,12 @@ var CodeBox = React.createClass({
         this.props.clicked();
     },
     render: function() {
-      
+
       if(!this.props.hidden){
         return (
             <div className="row">
                 <div id="code-box">
-                    <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question">return ;</textarea>
+                    <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question">return </textarea>
                     <button className="btn btn-default" id="submit" onClick={this.handleClick}>Submit</button>
                 </div>
             </div>
@@ -134,17 +134,17 @@ var parseQuestionInput = function(myString) {
 };
 
 var WelcomePage = React.createClass({
-  
+
   render: function() {
-    
+
     if(this.props.hidden)
       return <div/>
-        
+
     else
       return <p>WELCOME !</p>;
-    
+
   }
-  
+
 });
 
 var OneLinerApp = React.createClass({
@@ -178,6 +178,26 @@ var OneLinerApp = React.createClass({
 
         this.setState({currentSession: session, isMatched: true});
 
+        // Put cursor in text element
+
+        // TODO: Move TFO of here
+        $.fn.selectRange = function(start, end) {
+            if(!end) end = start;
+            return this.each(function() {
+                if (this.setSelectionRange) {
+                    this.focus();
+                    this.setSelectionRange(start, end);
+                } else if (this.createTextRange) {
+                    var range = this.createTextRange();
+                    range.collapse(true);
+                    range.moveEnd('character', end);
+                    range.moveStart('character', start);
+                    range.select();
+                }
+            });
+        };
+
+        $('#code').selectRange(7);
       }.bind(this));
 
      socket.on("incorrect_answer", function(debug_info) {
@@ -199,7 +219,7 @@ var OneLinerApp = React.createClass({
     socket.on("game_over", function(result){
 
       alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
-      
+
       socket.emit("requeue");
 
     }.bind(this));
