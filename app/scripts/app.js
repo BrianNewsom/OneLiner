@@ -115,22 +115,60 @@ var WelcomePage = React.createClass({
 
 });
 
+var GameOverPage = React.createClass({
+  handleClick: function() {
+    this.props.clicked();
+  },
+  render: function() {
+
+    if(this.props.hidden)
+      return <div/>
+
+    else{
+      var result = "";
+      this.props.winner ? result = "You Win!" : result = "You Lose :(";
+
+      return (
+        <div>
+          <div className = "row">
+            <img className="logoFit" src="http://i.imgur.com/aDL2oT4.png"></img>
+          </div>
+          <div className = "row">
+            <h1> Game Over! </h1>
+          </div>
+          <div className = "row">
+            <h1> {result} </h1>
+          </div>
+          <br/>
+          <button onClick={this.handleClick} className="btn btn-default">Play Again!</button>
+          <br/>
+        </div>
+      )
+    }
+
+  }
+
+});
+
+
 var OneLinerApp = React.createClass({
   getInitialState: function() {
-    return ({ currentSession: { question: {
-        question: '',
-        difficulty: 0,
-        time: 0,
-        test_data:
-            {
-                input: null,
-                output: ""
-            }
-    }},
-    socket: io(),
-    yourOutput: "",
-    opponentOutput: "",
-    isMatched:false
+    return ({
+        currentSession: { question: {
+            question: '',
+            difficulty: 0,
+            time: 0,
+            test_data:
+                {
+                    input: null,
+                    output: ""
+                }
+        }},
+        socket: io(),
+        yourOutput: "",
+        opponentOutput: "",
+        isMatched:false,
+        isGameOver:false
     })
   },
   componentDidMount: function()
@@ -139,7 +177,7 @@ var OneLinerApp = React.createClass({
       var socket = this.state.socket;
 
       socket.on("match_made", function(session) {
-        
+
         $("#output-box").removeClass("error");
 
         console.log("found a match: " + JSON.stringify(session));
@@ -176,7 +214,7 @@ var OneLinerApp = React.createClass({
        if(this.state.currentSession.opponent_id != debug_info.submitter) {
 
           this.setState({yourOutput: debug_info.actual_value});
-         
+
           $("#expected-output").val("Expected Output: " + debug_info.expected_value);
           $("#question-input").val("Input: " + parseQuestionInput(debug_info.input_value));
           $("#output-box").addClass("error");
@@ -192,11 +230,13 @@ var OneLinerApp = React.createClass({
 
     socket.on("game_over", function(result) {
 
-      alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
-
+      this.setState({isWinner: this.state.currentSession.opponent_id != result.winner});
+      this.setState({isGameOver: "true"});
+      /*
       socket.emit("requeue");
-      
+
       $('#code').val("return ");
+      */
 
     }.bind(this));
 
@@ -210,12 +250,33 @@ var OneLinerApp = React.createClass({
     socket.emit("submit_answer", {session_id: this.state.currentSession.session_id, code: code});
 
   },
+  onPlayAgain: function() {
+
+    var socket = this.state.socket;
+
+    this.setState({
+        currentSession: { question: {
+            question: '',
+            difficulty: 0,
+            time: 0,
+            test_data:
+                {
+                    input: null,
+                    output: ""
+                }
+        }},
+        isMatched: false, isGameOver: false, yourOutput: "", opponentOutput: "", isWinner: false
+    });
+
+    socket.emit("requeue");
+  },
   render: function() {
     return (
       <div className="container-fluid">
         <WelcomePage hidden={this.state.isMatched}/>
-        <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput} hidden={!this.state.isMatched}/>
-        <CodeBox clicked={this.onSubmit} hidden={!this.state.isMatched}/>
+        <Question question_data={this.state.currentSession.question} output={this.state.yourOutput} opponentOutput={this.state.opponentOutput} hidden={!this.state.isMatched || this.state.isGameOver}/>
+        <CodeBox clicked={this.onSubmit} hidden={!this.state.isMatched || this.state.isGameOver}/>
+        <GameOverPage hidden={!this.state.isGameOver} clicked={this.onPlayAgain} winner={this.state.isWinner}/>
       </div>
     );
   }
