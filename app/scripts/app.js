@@ -199,6 +199,8 @@ var OneLinerApp = React.createClass({
     socket.on("game_over", function(result){
 
       alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
+      
+      socket.emit("requeue");
 
     }.bind(this));
 

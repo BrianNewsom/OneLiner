@@ -43,11 +43,8 @@ var createInputParameters = function (inputArray) {
   var inputParameters = "";
 
   for(var i = 0; i < inputArray.length; i++) {
-
-//    if(typeof(inputArray[i]) == "object")
+    
       inputParameters += JSON.stringify(inputArray[i]) + ",";
-//    else
-//      inputParameters += inputArray[i] + ",";
 
   }
   console.log(inputParameters);
@@ -55,12 +52,8 @@ var createInputParameters = function (inputArray) {
 
 }
 
-// MODULE HERE. refactor here
-
 var playerQueue = [];
 var gameSessions = [];
-
-// END MODULE
 
 http.listen(port, function(){
   console.log('listening on *:', port);
@@ -70,7 +63,8 @@ io.on('connection', function(socket) {
 
   console.log(socket.id + ' connected');
 
-  if( playerQueue.length > 0 ) {
+  var matchPlayer = function() {
+    if( playerQueue.length > 0 ) {
 
     // Get the first player in the queue.
     var firstPlayerSocket = playerQueue.shift();
@@ -93,8 +87,19 @@ io.on('connection', function(socket) {
     playerQueue.push(socket);
 
   }
+    
+  }
+  
+  matchPlayer();
 
 
+  socket.on("requeue", function() {
+    
+    playerQueue.push(socket);
+    matchPlayer();
+    
+  });
+  
   socket.on("submit_answer", function(packet) {
 
     console.log("Received an answer: " + JSON.stringify(packet));
@@ -111,7 +116,7 @@ io.on('connection', function(socket) {
     // TODO: add some logic to remove potential malicious code.
     try {
 
-        var fn = new Function(createFunctionSignature(gameSession.question.test_cases[0].input), 'return ' + packet.code);
+        var fn = new Function(createFunctionSignature(gameSession.question.test_cases[0].input), packet.code);
 
         for(var i=0; i < gameSession.question.test_cases.length; i++) {
 
