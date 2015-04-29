@@ -297,29 +297,29 @@
         ]
     },
     {
-        "question": "Return var1 joined with var2 *Hint use join",
+        "question": "Return var1 joined with var2 *Hint use concat",
         "difficulty": 3,
         "time": 75,
         "test_cases": [
             {
                 "input": ["hello", " world"],
-                "output": "ello"
+                "output": "hello world"
             },
             {
-                "input":  ["YO"],
-                "output": "O"
+                "input":  ["a", "b"],
+                "output": "ab"
             },
             {
-                "input": ["Greetings"],
-                "output": "reetings"
+                "input": ["Greetings", " earthlings"],
+                "output": "Greetings earthlings"
             },
             {
-                "input": ["WORLD"],
-                "output": "ORLD"
+                "input": ["12", "34"],
+                "output": "1234"
             },
             {
-                "input": ["Boulder"],
-                "output": "oulder"
+                "input": ["Boulder", ", Colorado"],
+                "output": "Boulder, Colorado"
             }
         ]
     }
