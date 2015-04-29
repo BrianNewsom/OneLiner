@@ -7074,7 +7074,9 @@ button.close {
 }
 
 #code {
+  margin-top: 15px;
   text-align: left;
+  padding-left: 4px;
 }
 
 .error {

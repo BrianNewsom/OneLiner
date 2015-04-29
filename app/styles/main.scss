@@ -7,15 +7,17 @@ $icon-font-path: "/fonts/";
 }
 
 #code {
+  margin-top: 15px;
   text-align: left;
+  padding-left: 4px;
 }
 
 .error {
-  
+
   border-style: solid;
   border-color: firebrick;
   border-width: 1px;
-  
+
 }
 
 .browsehappy {
