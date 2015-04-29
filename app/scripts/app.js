@@ -4,7 +4,7 @@ var React = window.React = require('react'),
 
 var Question = React.createClass({
     render: function() {
-      if(!this.props.hidden){
+      if(!this.props.hidden) {
         return (
             <div id="question">
                 <h2>{this.props.question_data.question}</h2>
@@ -12,12 +12,12 @@ var Question = React.createClass({
                   <div id="output">
                       <div className="row">
                           <div className="col-md-6 col-md-offset-5">
-                              <input className="form-control" id="solution-output" placeholder={"Input: " + parseQuestionInput(this.props.question_data.test_data.input)} readOnly></input>
+                              <input className="form-control" id="question-input" placeholder={"Input: " + parseQuestionInput(this.props.question_data.test_data.input)} readOnly></input>
                           </div>
                       </div>
                       <div className="row">
                           <div className="col-md-3 col-md-offset-5">
-                              <input className="form-control" id="user-output" placeholder={"Expected Output: " + this.props.question_data.test_data.output} readOnly></input>
+                              <input className="form-control" id="expected-output" placeholder={"Expected Output: " + this.props.question_data.test_data.output} readOnly></input>
                           </div>
                           <div className="col-md-3 col-mod-offset-6" id="opponent">
                               <input className="form-control" id="opponent-output" placeholder={"Opponent Output: " + this.props.opponentOutput} readOnly></input>
@@ -25,7 +25,7 @@ var Question = React.createClass({
                       </div>
                       <div className="row">
                           <div className="col-md-6 col-md-offset-5">
-                            <input className="form-control" placeholder={"Your Output: " + this.props.output} readOnly></input>
+                            <input id="output-box" className="form-control" placeholder={"Your Output: " + this.props.output} readOnly></input>
                           </div>
                       </div>
                   </div>
@@ -124,6 +124,8 @@ var OneLinerApp = React.createClass({
       var socket = this.state.socket;
 
       socket.on("match_made", function(session) {
+        
+        $("#output-box").removeClass("error");
 
         console.log("found a match: " + JSON.stringify(session));
 
@@ -159,6 +161,10 @@ var OneLinerApp = React.createClass({
        if(this.state.currentSession.opponent_id != debug_info.submitter) {
 
           this.setState({yourOutput: debug_info.actual_value});
+         
+          $("#expected-output").val("Expected Output: " + debug_info.expected_value);
+          $("#question-input").val("Input: " + parseQuestionInput(debug_info.input_value));
+          $("#output-box").addClass("error");
 
        }
        else {
