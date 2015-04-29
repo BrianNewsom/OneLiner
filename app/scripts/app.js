@@ -58,7 +58,7 @@ var CodeBox = React.createClass({
         this.props.clicked();
     },
     render: function() {
-      
+
       if(!this.props.hidden){
         return (
             <div className="row">
@@ -134,17 +134,33 @@ var parseQuestionInput = function(myString) {
 };
 
 var WelcomePage = React.createClass({
-  
+
   render: function() {
-    
+
     if(this.props.hidden)
       return <div/>
-        
+
+    //Here lies the entirety of the welcome page
     else
-      return <p>WELCOME !</p>;
-    
+      return (
+        <div>
+          <div className = "row">
+            <img className="logoFit" src="http://i.imgur.com/aDL2oT4.png"></img>
+          </div>
+          <div className = "row">
+            <div className ="welcomeBody col-md-offset-2 col-md-8">You have arrived at OneLiner! This is a live coding competition where you need to out-program another person live via one line return statements. JavaScript is your weapon, solve wisely my friends.</div>
+          </div>
+          <div className = "row">
+            <div className ="welcomeBody col-md-offset-2 col-md-8">Awaiting match</div>
+          </div>
+          <div className = "row">
+            <img className = "spinWait" src="https://apps.nea.gov/grantsearch/images/ajaxSpinner.gif" alt="Waiting spinner"></img>
+          </div>
+        </div>
+      )
+
   }
-  
+
 });
 
 var OneLinerApp = React.createClass({
