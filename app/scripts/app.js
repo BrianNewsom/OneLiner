@@ -28,9 +28,6 @@ var Question = React.createClass({
                             <input className="form-control" placeholder={"Your Output: " + this.props.output} readOnly></input>
                           </div>
                       </div>
-                      <div className="row">
-                        <CountdownTimer secondsRemaining={this.props.question_data.time}/>
-                      </div>
                   </div>
                 </div>
             </div>
@@ -58,7 +55,7 @@ var CodeBox = React.createClass({
         this.props.clicked();
     },
     render: function() {
-      
+
       if(!this.props.hidden){
         return (
             <div className="row">
@@ -77,50 +74,6 @@ var CodeBox = React.createClass({
 
 })
 
-var CountdownTimer = React.createClass({
-  getInitialState: function() {
-    return {
-      secondsRemaining: 0
-    };
-  },
-  tick: function() {
-
-    this.setState({secondsRemaining: this.state.secondsRemaining - 1});
-    if (this.state.secondsRemaining < 0) {
-      clearInterval(this.interval);
-    }
-
-  },
-  componentWillReceiveProps: function(nextProp) {
-
-    this.setState({ secondsRemaining: nextProp.secondsRemaining });
-    clearInterval(this.interval);
-    this.interval = setInterval(this.tick, 1000);
-
-  },
-  componentDidMount: function() {
-
-    this.setState({ secondsRemaining: this.props.secondsRemaining });
-    this.interval = setInterval(this.tick, 1000);
-
-  },
-  componentWillUnmount: function() {
-
-    clearInterval(this.interval);
-
-  },
-  render: function() {
-    console.log("render: " + this.props.secondsRemaining);
-    return (
-    <div>
-       <ul>
-          <li className="chart" data-percent="100"><span>{this.state.secondsRemaining}</span></li>
-      </ul>
-    </div>
-    );
-  }
-});
-
 var parseQuestionInput = function(myString) {
   var toReturn = ""
   if (!myString){
@@ -134,17 +87,17 @@ var parseQuestionInput = function(myString) {
 };
 
 var WelcomePage = React.createClass({
-  
+
   render: function() {
-    
+
     if(this.props.hidden)
       return <div/>
-        
+
     else
       return <p>WELCOME !</p>;
-    
+
   }
-  
+
 });
 
 var OneLinerApp = React.createClass({
@@ -178,6 +131,26 @@ var OneLinerApp = React.createClass({
 
         this.setState({currentSession: session, isMatched: true, yourOutput: "", opponentOutput: ""});
 
+        // Put cursor in text element
+
+        // TODO: Move TFO of here
+        $.fn.selectRange = function(start, end) {
+            if(!end) end = start;
+            return this.each(function() {
+                if (this.setSelectionRange) {
+                    this.focus();
+                    this.setSelectionRange(start, end);
+                } else if (this.createTextRange) {
+                    var range = this.createTextRange();
+                    range.collapse(true);
+                    range.moveEnd('character', end);
+                    range.moveStart('character', start);
+                    range.select();
+                }
+            });
+        };
+
+        $('#code').selectRange(7);
       }.bind(this));
 
      socket.on("incorrect_answer", function(debug_info) {
@@ -199,7 +172,7 @@ var OneLinerApp = React.createClass({
     socket.on("game_over", function(result) {
 
       alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
-      
+
       socket.emit("requeue");
       
       $('#code').val("return ");
