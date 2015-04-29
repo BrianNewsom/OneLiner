@@ -54,7 +54,7 @@ var createInputParameters = function (inputArray) {
 var playerQueue = [];
 var gameSessions = [];
 
-http.listen(port, function(){
+http.listen(port, function() {
   console.log('listening on *:', port);
 });
 

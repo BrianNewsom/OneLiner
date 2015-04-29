@@ -63,7 +63,7 @@ var CodeBox = React.createClass({
         return (
             <div className="row">
                 <div id="code-box">
-                    <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question">return ;</textarea>
+                    <textarea className="form-control" id="code" rows="3" placeholder="Write some code to solve the question">return </textarea>
                     <button className="btn btn-default" id="submit" onClick={this.handleClick}>Submit</button>
                 </div>
             </div>
@@ -149,7 +149,7 @@ var WelcomePage = React.createClass({
 
 var OneLinerApp = React.createClass({
   getInitialState: function() {
-    return ({ currentSession: {question: {
+    return ({ currentSession: { question: {
         question: '',
         difficulty: 0,
         time: 0,
@@ -201,6 +201,8 @@ var OneLinerApp = React.createClass({
       alert("You " + (this.state.currentSession.opponent_id!=result.winner?"Win!":"Lose :(") + "\nCorrect Answer: " + result.code);
       
       socket.emit("requeue");
+      
+      $('#code').val("return ");
 
     }.bind(this));
 
