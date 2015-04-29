@@ -241,8 +241,6 @@ gulp.task('serve', ['html', 'fonts', 'bundle', 'backend'], function() {
 // Build
 gulp.task('build', ['html', 'buildBundle', 'images', 'fonts', 'extras'], function() {
     gulp.src('dist/scripts/app.js')
-        .pipe($.uglify())
-        .pipe($.stripDebug())
         .pipe(gulp.dest('dist/scripts'));
 });
 
